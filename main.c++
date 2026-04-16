@@ -45,3 +45,20 @@ bool visited(State s) {
     }
     return false;
 }
+
+void updateCoins(State &s) {
+    if (s.x == coinX[0] && s.y == coinY[0]) s.c1 = 't';
+    if (s.x == coinX[1] && s.y == coinY[1]) s.c2 = 't';
+    if (s.x == coinX[2] && s.y == coinY[2]) s.c3 = 't';
+    if (s.x == coinX[3] && s.y == coinY[3]) s.c4 = 't';
+}
+
+void refillFuel(State &s) {
+    if (s.x == fuelX && s.y == fuelY)
+        s.fuel = 20;
+}
+
+void printState(State s) {
+    cout << "(" << s.x << "," << s.y << "," << s.fuel << ",";
+    cout << s.c1 << "," << s.c2 << "," << s.c3 << "," << s.c4 << ")";
+}
