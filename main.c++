@@ -46,4 +46,3 @@ bool visited(State s) {
     }
     return false;
 }
-//later
