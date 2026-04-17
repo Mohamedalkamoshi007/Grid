@@ -194,7 +194,7 @@ bool DFS(State start) {
     cout << "No Solution Using DFS\n";
     return false;
 }
-// ================= IDS =================
+// IDS
 bool DLS(State s, int depth, int limit, int parentIndex) {
     cout << "Visited: ";
     printState(s);
