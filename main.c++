@@ -261,3 +261,40 @@ bool IDS(State start) {
     cout << "No Solution Using IDS\n";
     return false;
 }
+//MAIN
+int main() {
+    State start;
+
+    cout << "Enter start x: ";
+    cin >> start.x;
+
+    cout << "Enter start y: ";
+    cin >> start.y;
+
+    cout << "Enter start fuel: ";
+    cin >> start.fuel;
+
+    start.c1 = 'f';
+    start.c2 = 'f';
+    start.c3 = 'f';
+    start.c4 = 'f';
+
+    updateCoins(start);
+    refillFuel(start);
+
+    int choice;
+
+    cout << "\n1. BFS\n2. DFS\n3. IDS\n";
+    cout << "Choose algorithm: ";
+    cin >> choice;
+
+    if (choice == 1)
+        BFS(start);
+    else if (choice == 2)
+        DFS(start);
+    else if (choice == 3)
+        IDS(start);
+    else
+        cout << "Invalid Choice\n";
+
+}
