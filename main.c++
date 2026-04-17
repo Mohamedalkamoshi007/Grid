@@ -82,3 +82,59 @@ void printPath(int index) {
 
     cout << "\nNumber of visited states: " << nodeCount << endl;
 }
+// BFS
+bool BFS(State start) {
+    nodeCount = 0;
+
+    int queue[MAX_STATES];
+    int front = 0, rear = 0;
+
+    nodes[nodeCount].state = start;
+    nodes[nodeCount].parent = -1;
+    queue[rear++] = nodeCount;
+    nodeCount++;
+
+    while (front < rear) {
+        int current = queue[front++];
+        State s = nodes[current].state;
+
+        cout << "Visited: ";
+        printState(s);
+        cout << endl;
+
+        if (isGoal(s)) {
+            cout << "\nGoal Found Using BFS!\n";
+            printPath(current);
+            return true;
+        }
+
+        int dx[4] = {-1, 1, 0, 0};
+        int dy[4] = {0, 0, -1, 1};
+
+        for (int i = 0; i < 4; i++) {
+            State next = s;
+            next.x += dx[i];
+            next.y += dy[i];
+            next.fuel--;
+
+            if (next.x < 0  || next.x >= SIZE || next.y < 0 || next.y >= SIZE)
+                continue;
+
+            if (next.fuel < 0)
+                continue;
+
+            updateCoins(next);
+            refillFuel(next);
+
+            if (!visited(next)) {
+                nodes[nodeCount].state = next;
+                nodes[nodeCount].parent = current;
+                queue[rear++] = nodeCount;
+                nodeCount++;
+            }
+        }
+    }
+
+    cout << "No Solution Using BFS\n";
+    return false;
+}
