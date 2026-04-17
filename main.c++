@@ -138,3 +138,59 @@ bool BFS(State start) {
     cout << "No Solution Using BFS\n";
     return false;
 }
+//DFS 
+bool DFS(State start) {
+    nodeCount = 0;
+
+    int stack[MAX_STATES];
+    int top = -1;
+
+    nodes[nodeCount].state = start;
+    nodes[nodeCount].parent = -1;
+    stack[++top] = nodeCount;
+    nodeCount++;
+
+    while (top >= 0) {
+        int current = stack[top--];
+        State s = nodes[current].state;
+
+        cout << "Visited: ";
+        printState(s);
+        cout << endl;
+
+        if (isGoal(s)) {
+            cout << "\nGoal Found Using DFS!\n";
+            printPath(current);
+            return true;
+        }
+
+        int dx[4] = {0, 0, 1, -1};
+        int dy[4] = {1, -1, 0, 0};
+
+        for (int i = 0; i < 4; i++) {
+            State next = s;
+            next.x += dx[i];
+            next.y += dy[i];
+            next.fuel--;
+
+            if (next.x < 0 || next.x >= SIZE || next.y < 0 || next.y >= SIZE)
+                continue;
+
+            if (next.fuel < 0)
+                continue;
+
+            updateCoins(next);
+            refillFuel(next);
+
+            if (!visited(next)) {
+                nodes[nodeCount].state = next;
+                nodes[nodeCount].parent = current;
+                stack[++top] = nodeCount;
+                nodeCount++;
+            }
+        }
+    }
+
+    cout << "No Solution Using DFS\n";
+    return false;
+}
