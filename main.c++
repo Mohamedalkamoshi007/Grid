@@ -194,3 +194,70 @@ bool DFS(State start) {
     cout << "No Solution Using DFS\n";
     return false;
 }
+// ================= IDS =================
+bool DLS(State s, int depth, int limit, int parentIndex) {
+    cout << "Visited: ";
+    printState(s);
+    cout << endl;
+
+    nodes[nodeCount].state = s;
+    nodes[nodeCount].parent = parentIndex;
+    int currentIndex = nodeCount;
+    nodeCount++;
+
+    if (isGoal(s)) {
+        cout << "\nGoal Found Using IDS!\n";
+        printPath(currentIndex);
+        return true;
+    }
+
+    if (depth == limit)
+        return false;
+
+    int dx[4] = {-1, 1, 0, 0};
+    int dy[4] = {0, 0, -1, 1};
+
+    for (int i = 0; i < 4; i++) {
+        State next = s;
+        next.x += dx[i];
+        next.y += dy[i];
+        next.fuel--;
+
+        if (next.x < 0 || next.x >= SIZE || next.y < 0 || next.y >= SIZE)
+            continue;
+
+        if (next.fuel < 0)
+            continue;
+
+        updateCoins(next);
+        refillFuel(next);
+
+        bool repeated = false;
+        for (int j = 0; j < nodeCount; j++) {
+            if (sameState(nodes[j].state, next)) {
+                repeated = true;
+                break;
+            }
+        }
+
+        if (!repeated) {
+            if (DLS(next, depth + 1, limit, currentIndex))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool IDS(State start) {
+    for (int limit = 0; limit <= 50; limit++) {
+        cout << "\n--- Depth Limit = " << limit << " ---\n";
+        nodeCount = 0;
+
+        if (DLS(start, 0, limit, -1))
+            return true;
+    }
+
+    cout << "No Solution Using IDS\n";
+    return false;
+}
