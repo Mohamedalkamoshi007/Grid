@@ -62,3 +62,21 @@ void printState(State s) {
     cout << "(" << s.x << "," << s.y << "," << s.fuel << ",";
     cout << s.c1 << "," << s.c2 << "," << s.c3 << "," << s.c4 << ")";
 }
+
+void printPath(int index) {
+    int path[PATH_LIMIT];
+    int length = 0;
+
+    while (index != -1) {
+        path[length++] = index;
+        index = nodes[index].parent;
+    }
+
+    cout << "\nPath:\n";
+    for (int i = length - 1; i >= 0; i--) {
+        printState(nodes[path[i]].state);
+        cout << endl;
+    }
+
+    cout << "\nNumber of visited states: " << nodeCount << endl;
+}
