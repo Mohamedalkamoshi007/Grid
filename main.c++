@@ -1,44 +1,51 @@
 #include <iostream>
 using namespace std;
 
-const int SIZE = 10;
-const int MAX_STATES = 10000;
-const int PATH_LIMIT = 500;
+const int SIZE = 10; // حجم الـ Grid
+const int MAX_STATES = 10000; //اقصى عدد حالات ممكن نخزنوها
+const int PATH_LIMIT = 500; // اقصى طول للمسار 
 struct State {
-    int x, y;
-    int fuel;
-    char c1, c2, c3, c4; // 't' or 'f'
+    int x, y; // موقع الـ AGENT
+    int fuel;  // محطة البنزين 
+    char c1, c2, c3, c4; // 't' or 'f'الكوينز
 };
-
+// العقدة الحالية و الاب متاعها
 struct Node {
     State state;
     int parent;
 };
-
+// مصفوفة للحالات
 Node nodes[MAX_STATES];
-int nodeCount;
+int nodeCount; // متغير لمعرفة عدد الحالات
 
-// Coins positions
-int coinX[4] = {2, 3, 5, 8};
-int coinY[4] = {2, 5, 7, 8};
+// موقع العملات 
+int coinX[4] = {1, 2, 5, 6}; 
+int coinY[4] = {2, 5, 5, 9};
 
-// Fuel station
-int fuelX = 4;
-int fuelY = 9;
+// موقع محطة الوقود
+int fuelX = 6;
+int fuelY = 6;
 
-// goal check
+//اماكن الحواجز
+bool isBlocked(int x, int y){
+    if((x==2 && y==2) || (x==3 && y==3) || (x==4 && y==4))
+        return true;
+    return false;
+}
+
+// باش نتحقق من الهدف في حال وصلتله
 bool isGoal(State s) {
     return (s.x == 1 && s.y == 1 &&
             s.c1 == 't' && s.c2 == 't' &&
             s.c3 == 't' && s.c4 == 't');
 }
-// Compare between states 
+// نقارنوا بين الحالات 
 bool sameState(State a, State b) {
     return (a.x == b.x && a.y == b.y && a.fuel == b.fuel &&
             a.c1 == b.c1 && a.c2 == b.c2 &&
             a.c3 == b.c3 && a.c4 == b.c4);
 }
-// the place u vidited between all states
+// التأكد من ان زرنا نفس الحالة او لا
 bool visited(State s) {
     for (int i = 0; i < nodeCount; i++) {
         if (sameState(nodes[i].state, s))
@@ -47,24 +54,24 @@ bool visited(State s) {
     return false;
 
 }
-
+// دالة تحدث الكوينز في حالة ان تحركنا الى مكان وكان فيه احد الكوينز
 void updateCoins(State &s) {
     if (s.x == coinX[0] && s.y == coinY[0]) s.c1 = 't';
     if (s.x == coinX[1] && s.y == coinY[1]) s.c2 = 't';
     if (s.x == coinX[2] && s.y == coinY[2]) s.c3 = 't';
     if (s.x == coinX[3] && s.y == coinY[3]) s.c4 = 't';
 }
-
+// دالة تعبي الوقود في حال وصلت للمحطة
 void refillFuel(State &s) {
     if (s.x == fuelX && s.y == fuelY)
         s.fuel = 20;
 }
-
+// دالة طباعة الحالة
 void printState(State s) {
     cout << "(" << s.x << "," << s.y << "," << s.fuel << ",";
     cout << s.c1 << "," << s.c2 << "," << s.c3 << "," << s.c4 << ")";
 }
-
+// دالة لطباعة المسار في حال وصلنا للهدف
 void printPath(int index) {
     int path[PATH_LIMIT];
     int length = 0;
@@ -80,7 +87,7 @@ void printPath(int index) {
         cout << endl;
     }
 
-    cout << "\nNumber of visited states: " << nodeCount << endl;
+    cout << "\nCost: " << length - 1 << endl;
 }
 // BFS
 bool BFS(State start) {
@@ -119,6 +126,9 @@ bool BFS(State start) {
 
             if (next.x < 0  || next.x >= SIZE || next.y < 0 || next.y >= SIZE)
                 continue;
+
+            if (isBlocked(next.x, next.y))
+                continue;    
 
             if (next.fuel < 0)
                 continue;
@@ -175,6 +185,9 @@ bool DFS(State start) {
 
             if (next.x < 0 || next.x >= SIZE || next.y < 0 || next.y >= SIZE)
                 continue;
+            
+            if (isBlocked(next.x, next.y))
+                continue;
 
             if (next.fuel < 0)
                 continue;
@@ -224,6 +237,9 @@ bool DLS(State s, int depth, int limit, int parentIndex) {
         next.fuel--;
 
         if (next.x < 0 || next.x >= SIZE || next.y < 0 || next.y >= SIZE)
+            continue;
+
+        if (isBlocked(next.x, next.y))
             continue;
 
         if (next.fuel < 0)
