@@ -3,7 +3,7 @@ using namespace std;
 
 const int SIZE = 10; // حجم الـ Grid
 const int MAX_STATES = 10000; //اقصى عدد حالات ممكن نخزنوها
-const int PATH_LIMIT = 500; // اقصى طول للمسار 
+const int PATH_LIMIT = 500; // اقصى طول للمسار
 struct State {
     int x, y; // موقع الـ AGENT
     int fuel;  // محطة البنزين 
@@ -86,7 +86,7 @@ void printPath(int index) {
         printState(nodes[path[i]].state);
         cout << endl;
     }
-
+    cout << "\nNumber of visited states: " << nodeCount << endl;
     cout << "\nCost: " << length - 1 << endl;
 }
 // BFS
